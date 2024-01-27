@@ -1,0 +1,343 @@
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="pdfmake.min.js" ></script>
+        <script src="vfs_fonts.js" ></script>
+    <title>Форма заполнение</title>
+    <style>
+        /* Styling the Body element i.e. Color, Font, Alignment */
+        body {
+        background-image: url('photo/halyk-270817.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        font-family: Verdana;
+        text-align: center;
+        margin: 0;
+        }
+
+        body::before {
+        content: "";
+        background: inherit;
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        filter: blur(10px);
+        }
+
+        /* Styling the Form (Color, Padding, Shadow) */
+        form {
+        background-color: #ffffff;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px 20px;
+        box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 25px; 
+        }
+
+        /* Styling form-control Class */
+        .form-control {
+        text-align: left;
+        margin-bottom: 25px;
+        }
+
+        /* Styling form-control Label */
+        .form-control label {
+        display: block;
+        margin-bottom: 10px;
+        }
+
+        /* Styling form-control input, select, textarea */
+        .form-control input,
+        .form-control select,
+        .form-control textarea {
+        border: 1px solid #777;
+        border-radius: 2px;
+        font-family: inherit;
+        padding: 10px;
+        display: block;
+        width: 95%;
+        }
+
+        /* Styling form-control Radio button and Checkbox */
+        .form-control input[type="radio"],
+        .form-control input[type="checkbox"] {
+        display: inline-block;
+        width: auto;
+        }
+
+        /* Styling Button */
+        button {
+        background-color: #05c46b;
+        border: 1px solid #777;
+        border-radius: 2px;
+        font-family: inherit;
+        font-size: 21px;
+        display: block;
+        width: 100%;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        border-radius: 25px; 
+        }
+        .pressure-inputs {
+        display: flex;
+        }
+
+        .pressure-inputs input {
+        margin-right: 10px;
+        }
+
+        .bmi-inputs {
+        display: flex;
+        }
+
+        .bmi-inputs input {
+        margin-right: 10px;
+        }
+    </style>
+    </head>
+
+    <body>
+        
+    <h1>Форма заполнение</h1>
+    <!-- Create Form -->
+    <form id="form" onsubmit="saveDataAndRedirect(event)">
+
+        <!-- Details -->
+        <div class="form-control">
+            <label for="iin">ИИН</label>
+            <input type="text" id="id_iin" name="id_iin" placeholder="Введите ИИН" required />
+        </div>
+
+        <div class="form-control">
+            <label for="age" id="label-age">Возраст</label>
+            <!-- Input Type -->
+            <input type="number" id="age" placeholder="Введите возраст" min="16" max="60" required />
+            <div id="age-error" class="error-message"></div>
+        </div>
+
+        <div class="form-control">
+            <label>Пол</label>
+            <!-- Input Type -->
+            <label for="recommed-1"><input type="radio" id="recommed_1" name="gender" value="Мужчина" required>Мужчина</label>
+            <label for="recommed-2"><input type="radio" id="recommed_2" name="gender" value="Женщина" required>Женщина</label>
+        </div>
+
+        <div class="form-control">
+            <label for="bmi" id="label-bmi">Индекс Массы Тела</label>
+            <div class="bmi-inputs">
+              <input type="text" id="weight" placeholder="Введите вес" required />
+              <input type="text" id="height" placeholder="Введите рост" required />
+            </div>
+          </div>
+          
+          <div class="form-control">
+            <label for="pressure" id="label-pressure">Давление</label>
+            <div class="pressure-inputs">
+              <input type="text" id="upper_pressure" placeholder="верхнее давление" required />
+              <input type="text" id="lower_pressure" placeholder="Нижнее давление" required />
+            </div>
+          </div>
+          
+          
+
+          <div class="form-control">
+            <label for="amount_children" id="label-amount_children">Кол-во детей</label>
+            <!-- Input Type -->
+            <input type="number" id="amount_children" placeholder="Введите количество детей" min="0" max="10" required />
+            <div id="amount-children-error" class="error-message"></div>
+        </div>
+
+        <div class="form-control">
+            <label for="role" id="alcoholic">Употребляете ли алкоголь на регулярной основе? (более одного раза в день)</label>
+            
+            <!-- Alcoholic -->
+            <label for="recommed_3"><input type="radio" id="recommed_3" name="alcoholic" value="Да" onchange="toggleAdditionalInput()" required>Да</label>
+            <label for="recommed_4"><input type="radio" id="recommed_4" name="alcoholic" value="Нет" onchange="toggleAdditionalInput()" required>Нет</label>
+            
+            <div id="additionalInput" style="display: none;">
+                <label for="additionalInfo">Если да, укажите количество порций в неделю:</label>
+                <input type="text" id="additionalInfo" placeholder="Введите количество порций" />
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label>
+            У вас имеется ли социальная категория?
+            </label>
+            <!-- Input Type Radio Button -->
+            <label for="recommed-3">
+                <input type="radio" id="recommed_3" name="social" value="Да" required>Да</input>
+            </label>
+            <label for="recommed-4">
+            <input type="radio" id="recommed_4" name="social" value="Нет" required>Нет</input>
+            </label>
+        </div>
+
+        <div class="form-control">
+            <label for="role1" id="profession">Относитесь ли вы к следующим профессиям:</label>
+            <!-- Profession -->
+            <select name="role1" id="role1" required>
+                <option value="Нет">Нет</option>
+                <option value="Да">Горнодобывающая или нефтегазовая промышленность</option>
+                <option value="Да">Инженер - строитель</option>
+                <option value="Да">Сотрудник МЧС</option>
+                <option value="Да">Другой вид профессии, имеющий прямой риск для жизни или здоровью</option>
+            </select>
+            </div>
+
+
+            <div class="form-control">
+                <label>
+                Увлекаетесь ли экстремальным спортом, хобби?
+                </label>
+                <!-- Input Type Radio Button -->
+                <label for="recommed_5">
+                    <input type="radio" id="recommed_5" name="hobby" value="Да" required>Да</input>
+                </label>
+                <label for="recommed_6">
+                <input type="radio" id="recommed_6" name="hobby" value="Нет" required>Нет</input>
+                </label>
+            </div>
+            
+            <div class="form-control">
+                <label for="yearInsur" id="yearInsur_labe">На сколько лет вы хотите подстраховаться</label>
+                <!-- Input Type -->
+                <input type="number" id="yearInsur" placeholder="Введите возраст" min="1" max="20" required />
+            </div>
+
+        <!-- Multi-line Text Input Control -->
+        <button type="submit" value="submit">отправить</button>
+    </form>
+    <script>
+        
+        function saveDataAndRedirect(event) {
+
+            // дата
+            var data = new Date();
+            var year = data.getFullYear(); 
+            var month = data.getMonth() + 1; 
+            var day = data.getDate(); 
+            var hours = data.getHours();
+            var minutes = data.getMinutes(); 
+            var seconds = data.getSeconds(); 
+
+            
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+
+
+            var formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            var iin = document.getElementById("id_iin").value;
+            var age = document.getElementById("age").value;
+            var gender = document.querySelector('input[name="gender"]:checked').value;
+
+            // Подсчет bmi (имт)
+            var weight = document.getElementById("weight").value;
+            var height = (document.getElementById("height").value/100);
+
+            var bmi = weight / (height * height);
+
+            var bmi = bmi.toFixed(1);
+
+            var upper_pressure = document.getElementById("upper_pressure").value;
+            var lower_pressure = document.getElementById("lower_pressure").value;
+
+            var profession = document.getElementById("role1").value;
+            var hobby = document.querySelector('input[name="hobby"]:checked').value;
+            
+
+            var amountChildren = document.getElementById("amount_children").value;
+            var alcoholic = document.querySelector('input[name="alcoholic"]:checked').value;
+
+            var social = document.querySelector('input[name="social"]:checked').value;
+            
+            var yearInsur = document.getElementById("yearInsur").value;
+
+
+            // одобрение
+            if(true){
+                text_status = '[+] Одобрена\n[ ] Отклонена'
+            }
+            else{
+                text_status = '[ ] Одобрена\n[+] Отклонена'
+            }
+
+            // if((age+yearInsur)>70){
+            //     alert('Вы не можете получить страховку на такой срок.');
+            //     return;
+            // }
+
+            if (alcoholic == "Да"){
+                var additionalInfo = document.getElementById("additionalInfo").value;
+            }
+            else{
+                var additionalInfo = 0;
+            }
+            var docInfo = {
+                info: {
+                    title: 'Страховка',
+                    author: 'Halyk-life',
+                    subject: 'Страхование',
+                    keywords: 'Одобрение страховки'
+                },
+                pageSize: 'A4',
+                pageOrientation: 'landscape',
+                pageMargins: [30, 30, 30, 30],
+
+                content: [
+                    {
+                        text: '----------------------------------------------\nСПРАВКА О СТРАХОВКЕ\n----------------------------------------------\n\nДата: ' + formattedDate + '\n\nИНФОРМАЦИЯ О ЗАСТРАХОВАННОМ:\n----------------------------------------------\nИИН: ' + iin + 
+                        '\nВозраст: ' + age + 
+                        '\nПол: ' + gender + 
+                        '\nИМТ (индекс массы тела): ' + bmi + 
+                        '\nДавление: ' + upper_pressure + '/' + lower_pressure + 
+                        '\nКоличество детей: ' + amountChildren + 
+                        '\nЗависимость к алкоголю: ' + alcoholic + 
+                        '\nКоличество в неделю: ' + additionalInfo + 
+                        '\nСоциальная категория: ' + social + 
+                        '\nРискованная профессия: ' + profession + 
+                        '\nЭкстремальный спорт/хобби: ' + hobby +
+                        '\nГод страхование: ' + yearInsur + 
+                        '\n\nСТАТУС СТРАХОВКИ:\n----------------------------------------------\n' + text_status +
+                        '\n\n----------------------------------------------\n            Halyk-Life Страхование\n----------------------------------------------\n' + 
+                        '\nАдресс: пр-т. Абая 109В\nНомер: +7 (727) 244 62 22\nВеб-сайт: https://www.halyklife.kz/',
+                        fontSize:18,
+                        margin:[150, 80, 30, 0]
+                    }
+                ]
+            }
+            pdfMake.createPdf(docInfo).download('file.pdf');
+            alert('Поздравляю, ваша страховка одобрена.');
+        }
+        
+        function toggleAdditionalInput() {
+            var additionalInput = document.getElementById("additionalInput");
+            var additionalInfo = document.getElementById("additionalInfo");
+
+            var isAlcoholic = document.getElementById("recommed_3").checked;
+
+            if (isAlcoholic) {
+                additionalInput.style.display = "block";
+                additionalInfo.setAttribute("required", true);
+            } else {
+                additionalInput.style.display = "none";
+                additionalInfo.removeAttribute("required");
+            }
+            
+        }
+
+    </script>
+</body>
+</html>
